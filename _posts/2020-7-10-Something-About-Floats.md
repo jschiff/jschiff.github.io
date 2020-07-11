@@ -95,30 +95,30 @@ A couple of things we can take away from this right away:
 Given point #2, it stands to reason that we can skip any number that is not a power of 2 in our analysis and still be able to see the trend without missing anything. So I made a small change to my test harness. Rather than incrementing our "low" value by [one](https://github.com/jschiff/BlogExperiments/blob/ff748930087d92782eebae7d02887d6b1d8a3b5d/src/com/jschiff/math/fpprecision/FloatingPointPrecision.java#L45), we can now [double it](https://github.com/jschiff/BlogExperiments/blob/ff748930087d92782eebae7d02887d6b1d8a3b5d/src/com/jschiff/math/fpprecision/FloatingPointPrecision2.java#L45). Here are the results from that experiment, up to 512:
 
 ```
-    Low     High    Values In Between
-    1       2       8388608
-    2       3       4194304
-    4       5       2097152
-    8       9       1048576
-    16      17      524288
-    32      33      262144
-    64      65      131072
-    128     129     65536
-    256     257     32768
-    512     513     16384
+Low     High    Values In Between
+1       2       8388608
+2       3       4194304
+4       5       2097152
+8       9       1048576
+16      17      524288
+32      33      262144
+64      65      131072
+128     129     65536
+256     257     32768
+512     513     16384
 ```
 
 This is nice! Eventually though, something very strange happens in this series:
 
 ```
-    Low         High        Values In Between
-    1048576     1048577     8
-    2097152     2097153     4
-    4194304     4194305     2
-    8388608     8388609     1
-    16777216    16777216    0
-    33554432    33554432    0
-    67108864    67108864    0
+Low         High        Values In Between
+1048576     1048577     8
+2097152     2097153     4
+4194304     4194305     2
+8388608     8388609     1
+16777216    16777216    0
+33554432    33554432    0
+67108864    67108864    0
 ```
 
 Our code is surely doing something wrong. Why are Low and High showing as the same number? Let's look back at our code:
@@ -140,8 +140,8 @@ public static PrecisionPair numberOfValues(float from) {
 We know that `iterations` is returning as `0`. That must mean we're never entering our while loop. Why wouldn't we enter our while loop? The only explanation is that `cursor` is never less than `target`. How is this possible? Remember, we're running this code right before the while loop:
 
 ```java
-    float cursor = from;
-    float target = from + 1;
+float cursor = from;
+float target = from + 1;
 ```
 
 The amazing implication here is that at a certain value for a floating point number `x`: `x + 1 <= x`. In fact what is happening is that the precision of the floating point number around the value `16777216` has become so sparse that it is impossible to represent the next whole number, `16777217` accurately using a 32 bit float. So in float world, `16777216 + 1 = 16777216`.
