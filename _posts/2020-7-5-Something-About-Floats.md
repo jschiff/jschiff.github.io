@@ -54,32 +54,35 @@ I set out to find out. I know the answers to these questions can be answered by 
 
 I wrote some quick Java code to check how many float values exist between two whole numbers:
 
-    public static PrecisionPair numberOfValues(float from) {
-        float cursor = from;
-        float target = from + 1;
-        long iterations = 0;
-        while (cursor < target) {
-            cursor = Math.nextUp(cursor);
-            iterations++;
-        }
-
-        return new PrecisionPair(from, target, iterations);
+```java
+public static PrecisionPair numberOfValues(float from) {
+    float cursor = from;
+    float target = from + 1;
+    long iterations = 0;
+    while (cursor < target) {
+        cursor = Math.nextUp(cursor);
+        iterations++;
     }
 
-I also wrote a quick [harness](https://github.com/jschiff/BlogExperiments/blob/master/src/com/jschiff/math/fpprecision/FloatingPointPrecision.java) for testing an arbitrary set of whole numbers and tested the first 10 just to see what I was working with. This was the result:
+    return new PrecisionPair(from, target, iterations);
+}
+```
 
-    Low     High    Values In Between
-    0       1       1065353216
-    1       2       8388608
-    2       3       4194304
-    3       4       4194304
-    4       5       2097152
-    5       6       2097152
-    6       7       2097152
-    7       8       2097152
-    8       9       1048576
-    9       10      1048576
-    10      11      1048576
+I also wrote a quick [harness](https://github.com/jschiff/BlogExperiments/blob/master/src/com/jschiff/math/fpprecision/FloatingPointPrecision.java) for testing an arbitrary set of whole numbers and tested the first 10 just to see what I was working with. This was the result:
+```
+Low     High    Values In Between
+0       1       1065353216
+1       2       8388608
+2       3       4194304
+3       4       4194304
+4       5       2097152
+5       6       2097152
+6       7       2097152
+7       8       2097152
+8       9       1048576
+9       10      1048576
+10      11      1048576
+```
     
 A couple of things we can take away from this right away:
 1. As we expected, the space between 0 and 1 contains an enormous number of possible values
@@ -117,86 +120,91 @@ This is nice! Eventually though, something very strange happens in this series:
     
 Our code is surely doing something wrong. Why are Low and High showing as the same number? Let's look back at our code:
     
-    public static PrecisionPair numberOfValues(float from) {
-        float cursor = from;
-        float target = from + 1;
-        long iterations = 0;
-        while (cursor < target) {
-            cursor = Math.nextUp(cursor);
-            iterations++;
-        }
-
-        return new PrecisionPair(from, target, iterations);
+```java
+public static PrecisionPair numberOfValues(float from) {
+    float cursor = from;
+    float target = from + 1;
+    long iterations = 0;
+    while (cursor < target) {
+        cursor = Math.nextUp(cursor);
+        iterations++;
     }
+
+    return new PrecisionPair(from, target, iterations);
+}
+```
     
 We know that `iterations` is returning as `0`. That must mean we're never entering our while loop. Why wouldn't we enter our while loop? The only explanation is that `cursor` is never less than `target`. How is this possible? Remember, we're running this code right before the while loop:
 
+```java
     float cursor = from;
     float target = from + 1;
+```
 
 The amazing implication here is that at a certain value for a floating point number `x`: `x + 1 <= x`. In fact what is happening is that the precision of the floating point number around the value `16777216` has become so sparse that it is impossible to represent the next whole number, `16777217` accurately using a 32 bit float. So in float world, `16777216 + 1 = 16777216`.
 
 So let's make a small change to our code to keep things sane. Rather than simply adding 1, let's try to add 1, and if that hasn't done anything, let's call `Math.nextUp` instead and see what the actual next possible number is.
+```java
+public static PrecisionPair2 numberOfValuesWithFix(float from) {
+    float cursor = from;
+    float target = from + 1;
 
-        public static PrecisionPair2 numberOfValuesWithFix(float from) {
-            float cursor = from;
-            float target = from + 1;
-    
-            // This happens if the resolution of the floating point is too fuzzy to represent from + 1
-            if (target == from) {
-                target = Math.nextUp(from);
-            }
-    
-            long iterations = 0;
-            while (cursor < target) {
-                cursor = Math.nextUp(cursor);
-                iterations++;
-            }
-    
-            return new PrecisionPair2(from, target, iterations);
-        }
+    // This happens if the resolution of the floating point is too fuzzy to represent from + 1
+    if (target == from) {
+        target = Math.nextUp(from);
+    }
+
+    long iterations = 0;
+    while (cursor < target) {
+        cursor = Math.nextUp(cursor);
+        iterations++;
+    }
+
+    return new PrecisionPair2(from, target, iterations);
+}
+```
         
 I've also made a `PrecisionPair2` result type which simply has a [slightly different toString() method](https://github.com/jschiff/BlogExperiments/blob/ff748930087d92782eebae7d02887d6b1d8a3b5d/src/com/jschiff/math/fpprecision/PrecisionPair2.java#L20). This will allow us to also print the difference in magnitude between the `high` and `low` numbers.
 
 This leads us to this result:
 <a name="chart"></a>
-
-    Low         High        Values In Between   Distance Between Values
-    0           1           1065353216          1
-    1           2           8388608             1
-    2           3           4194304             1
-    4           5           2097152             1
-    8           9           1048576             1
-    16          17          524288              1
-    32          33          262144              1
-    64          65          131072              1
-    128         129         65536               1
-    256         257         32768               1
-    512         513         16384               1
-    1024        1025        8192                1
-    2048        2049        4096                1
-    4096        4097        2048                1
-    8192        8193        1024                1
-    16384       16385       512                 1
-    32768       32769       256                 1
-    65536       65537       128                 1<a name="128"></a>
-    131072      131073      64                  1
-    262144      262145      32                  1
-    524288      524289      16                  1
-    1048576     1048577     8                   1
-    2097152     2097153     4                   1
-    4194304     4194305     2                   1
-    8388608     8388609     1                   1
-    16777216    16777218    1                   2
-    33554432    33554436    1                   4
-    67108864    67108872    1                   8
-    134217728   134217744   1                   16
-    268435456   268435488   1                   32
-    536870912   536870976   1                   64
-    1073741824  1073741952  1                   128
-    2147483648  2147483904  1                   256
-    4294967296  4294967808  1                   512
-    
+```
+Low         High        Values In Between   Distance Between Values
+0           1           1065353216          1
+1           2           8388608             1
+2           3           4194304             1
+4           5           2097152             1
+8           9           1048576             1
+16          17          524288              1
+32          33          262144              1
+64          65          131072              1
+128         129         65536               1
+256         257         32768               1
+512         513         16384               1
+1024        1025        8192                1
+2048        2049        4096                1
+4096        4097        2048                1
+8192        8193        1024                1
+16384       16385       512                 1
+32768       32769       256                 1
+65536       65537       128                 1<a name="128"></a>
+131072      131073      64                  1
+262144      262145      32                  1
+524288      524289      16                  1
+1048576     1048577     8                   1
+2097152     2097153     4                   1
+4194304     4194305     2                   1
+8388608     8388609     1                   1
+16777216    16777218    1                   2
+33554432    33554436    1                   4
+67108864    67108872    1                   8
+134217728   134217744   1                   16
+268435456   268435488   1                   32
+536870912   536870976   1                   64
+1073741824  1073741952  1                   128
+2147483648  2147483904  1                   256
+4294967296  4294967808  1                   512
+```
 There is an interesting turnaround at value `16777216` where we go from talking about "How many float values are there between two whole numbers?" to "How many whole numbers are there between two floats?". 
 
 ### So what's up with the range [0, 1]?
@@ -218,19 +226,20 @@ I'm going to focus on Unity here since I have the most experience with it. I thi
 Let's say you make a racing game. A cursory googling of ["racing games"](https://lmgtfy.com/?q=racing+games&t=i) shows image after image of interfaces showing millisecond-resolution lap timers. According our [chart](#chart), after about 16,000 seconds of gameplay, `Time.time` can no longer accurately represent the current game time to a millisecond of precision. 16,000 seconds is about 4.5 hours. It isn't healthy, but a 5 hour gaming session isn't exactly unheard of. So you should definitely not be using Time.time to calculate your current race time.
 
 Another common pitfall of `Time.time` is to use it for Lerping. Let's say you want to Lerp an object from point A to point B. So you write this coroutine:
-
-    IEnumerator LerpObject(Transform t, Vector3 destination, float duration) {
-      Vector3 origin = t.position;
-      float startTime = Time.time;
-      float endTime = startTime + duration;
-      while (Time.time < endTime) {
-        float t = (Time.time - startTime) / duration;
-        t.position = Vector3.Lerp(origin, destination, t);
-        yield return null;
-      }
-      
-      t.position = destination;
-    } 
+```csharp
+IEnumerator LerpObject(Transform t, Vector3 destination, float duration) {
+  Vector3 origin = t.position;
+  float startTime = Time.time;
+  float endTime = startTime + duration;
+  while (Time.time < endTime) {
+    float t = (Time.time - startTime) / duration;
+    t.position = Vector3.Lerp(origin, destination, t);
+    yield return null;
+  }
+  
+  t.position = destination;
+} 
+```
 
 This looks fine at first. Then a player leaves your game on overnight to get an achievement([approximately 18 hours](#128)), and `Time.time` only has 128 subdivisions per second. Suddenly the movement looks jerky on your player's 144hz monitor because the refresh rate of the game is beyond the resolution of your Lerp.
 
