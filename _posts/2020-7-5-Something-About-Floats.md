@@ -67,7 +67,6 @@ public static PrecisionPair numberOfValues(float from) {
     return new PrecisionPair(from, target, iterations);
 }
 ```
-
 I also wrote a quick [harness](https://github.com/jschiff/BlogExperiments/blob/master/src/com/jschiff/math/fpprecision/FloatingPointPrecision.java) for testing an arbitrary set of whole numbers and tested the first 10 just to see what I was working with. This was the result:
 ```
 Low     High    Values In Between
@@ -83,7 +82,7 @@ Low     High    Values In Between
 9       10      1048576
 10      11      1048576
 ```
-    
+
 A couple of things we can take away from this right away:
 1. As we expected, the space between 0 and 1 contains an enormous number of possible values
 1. The number of values drops quickly after that
@@ -106,9 +105,9 @@ Given point #2, it stands to reason that we can skip any number that is not a po
     128     129     65536
     256     257     32768
     512     513     16384
-    
+
 This is nice! Eventually though, something very strange happens in this series:
-    
+
     Low         High        Values In Between
     1048576     1048577     8
     2097152     2097153     4
@@ -117,9 +116,9 @@ This is nice! Eventually though, something very strange happens in this series:
     16777216    16777216    0
     33554432    33554432    0
     67108864    67108864    0
-    
+
 Our code is surely doing something wrong. Why are Low and High showing as the same number? Let's look back at our code:
-    
+
 ```java
 public static PrecisionPair numberOfValues(float from) {
     float cursor = from;
@@ -133,7 +132,7 @@ public static PrecisionPair numberOfValues(float from) {
     return new PrecisionPair(from, target, iterations);
 }
 ```
-    
+
 We know that `iterations` is returning as `0`. That must mean we're never entering our while loop. Why wouldn't we enter our while loop? The only explanation is that `cursor` is never less than `target`. How is this possible? Remember, we're running this code right before the while loop:
 
 ```java
@@ -165,7 +164,7 @@ public static PrecisionPair2 numberOfValuesWithFix(float from) {
     return new PrecisionPair2(from, target, iterations);
 }
 ```
-        
+
 I've also made a `PrecisionPair2` result type which simply has a [slightly different toString() method](https://github.com/jschiff/BlogExperiments/blob/ff748930087d92782eebae7d02887d6b1d8a3b5d/src/com/jschiff/math/fpprecision/PrecisionPair2.java#L20). This will allow us to also print the difference in magnitude between the `high` and `low` numbers.
 
 This leads us to this result:
