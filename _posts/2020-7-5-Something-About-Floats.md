@@ -20,8 +20,8 @@ By 2020, more than 90% of all PCs run [64 bit operating systems on 64 bit hardwa
 
 It would be a reasonable assumption that by now, flagship game engines would be using 64-bit floating points for basic game-world position, rotation, and scale. But you would be wrong!
 
-Unreal Engine 4 uses [32 bit transforms](https://docs.unrealengine.com/en-US/API/Runtime/Core/Math/FTransform/index.html)
-Unity 2020 uses [32 bit transforms](https://docs.unity3d.com/ScriptReference/Transform.html)
+Unreal Engine 4 uses [32 bit transforms](https://docs.unrealengine.com/en-US/API/Runtime/Core/Math/FTransform/index.html)  
+Unity 2020 uses [32 bit transforms](https://docs.unity3d.com/ScriptReference/Transform.html)  
 Amazon Lumberyard uses [32 bit transforms](https://docs.aws.amazon.com/lumberyard/latest/apireference/class_a_z_1_1_transform_interface.html#a7a08e0aa6935f4b6d4296f8e9fe9c9f0)
 
 Why is this? I won't dig too deeply into the _why_ in this post, but generally it boils down to a few things:
