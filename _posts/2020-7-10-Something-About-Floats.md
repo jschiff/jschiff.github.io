@@ -94,6 +94,7 @@ A couple of things we can take away from this right away:
 
 Given point #2, it stands to reason that we can skip any number that is not a power of 2 in our analysis and still be able to see the trend without missing anything. So I made a small change to my test harness. Rather than incrementing our "low" value by [one](https://github.com/jschiff/BlogExperiments/blob/ff748930087d92782eebae7d02887d6b1d8a3b5d/src/com/jschiff/math/fpprecision/FloatingPointPrecision.java#L45), we can now [double it](https://github.com/jschiff/BlogExperiments/blob/ff748930087d92782eebae7d02887d6b1d8a3b5d/src/com/jschiff/math/fpprecision/FloatingPointPrecision2.java#L45). Here are the results from that experiment, up to 512:
 
+```
     Low     High    Values In Between
     1       2       8388608
     2       3       4194304
@@ -105,9 +106,11 @@ Given point #2, it stands to reason that we can skip any number that is not a po
     128     129     65536
     256     257     32768
     512     513     16384
+```
 
 This is nice! Eventually though, something very strange happens in this series:
 
+```
     Low         High        Values In Between
     1048576     1048577     8
     2097152     2097153     4
@@ -116,6 +119,7 @@ This is nice! Eventually though, something very strange happens in this series:
     16777216    16777216    0
     33554432    33554432    0
     67108864    67108864    0
+```
 
 Our code is surely doing something wrong. Why are Low and High showing as the same number? Let's look back at our code:
 
