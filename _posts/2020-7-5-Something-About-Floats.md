@@ -3,7 +3,7 @@ layout: post
 title: Something I've always wondered about floats
 ---
 
-# More Bits Is More Good
+## More Bits Is More Good
 
 In 1996 Nintendo released the N64. I was 6 years old at the time. I had no idea what a "bit" was, but the N64 has 64 of them and that was more than any previous game system. 64 bits was the future. Apparently the old Sony Playstation, which came out 3 years earlier only had 32 bits. This obviously meant the N64 was better, right?
 
@@ -16,7 +16,7 @@ In 2009, Microsoft released Windows 7, and within a year [almost half of Windows
 
 By 2020, more than 90% of all PCs run [64 bit operating systems on 64 bit hardware](https://techtalk.pcmatic.com/64-bit-operating-systems/)
 
-# Nowadays...
+## Nowadays...
 
 It would be a reasonable assumption that by now, flagship game engines would be using 64-bit floating points for basic game-world position, rotation, and scale. But you would be wrong!
 
@@ -32,13 +32,13 @@ Why is this? I won't dig too deeply into the _why_ in this post, but generally i
 
 32 bit is a compromise between cost and realism. Through experimentation, people have generally decided that 16 bit is not enough precision to convincingly represent a 3D world, but 32 is. 64 is better but the costs are not worth the benefit. Large, open-world games quickly run into challenges related to 32-bit floating point precision, but they can be worked with clever tricks like "Origin Shifting"
 
-# Precision
+## Precision
 
 Origin shifting is a trick that relies on a property of floating point numbers, which is that the precision of numbers you can represent with a float is higher the closer you are the origin. I don't remember where I originally read it, but a full _half_ of the possible values you can represent with a floating point number lie within the range [-1, 1]
 
 That's right, of the 4,294,967,296 distinct values you can represent with a float, fully half (2,147,483,648) are between -1 and 1. The entire rest of the number line from -Infinity to Infinity have to get by on half of the possible values. Furthermore, that is split evenly between positive and negative numbers, such that positive numbers greater than 1 only get a quarter, or 1,073,741,824 possible values.
 
-## Pigeonholes
+### Pigeonholes
 
 This immediately gets my brain thinking about the consequences. Take for example C#'s [Single.MaxValue](https://docs.microsoft.com/en-us/dotnet/api/system.single.maxvalue?view=netcore-3.1) This number is significantly larger than 1 billion, but it, and presumably many numbers smaller than it have to share bit-space with all the rest of the numbers greater than 1. With numbers like these in the mix, how many values can possible be reserved for areas like... between 500 and 501? What about between 1000 and 1001? Between 50,000 and 50,0001?
 
@@ -46,11 +46,11 @@ I've always wondered about this but could never really find a good explanation f
 
 I've spent a lot of time with Unity over the past couple of years, and I always particularly wondered what this means for a property like Unity's [Time.time](https://docs.unity3d.com/ScriptReference/Time-time.html). It's a 32-bit value that represents the time elapsed since the start of the game. Given the above information, we know that 3/4 of the precision of this value are thrown out after the first second of the game. How quickly does this number become completely useless?
 
-#The Experiment
+##The Experiment
 
 I set out to find out. I know the answers to these questions can be answered by examining the [IEEE-754](https://en.wikipedia.org/wiki/IEEE_754) and doing some math. But first of all, I'm not that smart, and second, I'd rather get my hands dirty.
 
-## First Pass - Increment By One
+### First Pass - Increment By One
 
 I wrote some quick Java code to check how many float values exist between two whole numbers:
 
@@ -91,7 +91,7 @@ A couple of things we can take away from this right away:
 1. The number of values changes seems to stay the same for consecutive numbers until we reach a power of 2
 1. Every power of 2 seems to cut the number of possible values between two whole numbers in half
 
-## Second Pass - Doubling
+### Second Pass - Doubling
 
 Given point #2, it stands to reason that we can skip any number that is not a power of 2 in our analysis and still be able to see the trend without missing anything. So I made a small change to my test harness. Rather than incrementing our "low" value by [one](https://github.com/jschiff/BlogExperiments/blob/ff748930087d92782eebae7d02887d6b1d8a3b5d/src/com/jschiff/math/fpprecision/FloatingPointPrecision.java#L45), we can now [double it](https://github.com/jschiff/BlogExperiments/blob/ff748930087d92782eebae7d02887d6b1d8a3b5d/src/com/jschiff/math/fpprecision/FloatingPointPrecision2.java#L45). Here are the results from that experiment, up to 512:
 
@@ -142,6 +142,8 @@ We know that `iterations` is returning as `0`. That must mean we're never enteri
 ```
 
 The amazing implication here is that at a certain value for a floating point number `x`: `x + 1 <= x`. In fact what is happening is that the precision of the floating point number around the value `16777216` has become so sparse that it is impossible to represent the next whole number, `16777217` accurately using a 32 bit float. So in float world, `16777216 + 1 = 16777216`.
+
+### Third Pass: Math.nextUp()
 
 So let's make a small change to our code to keep things sane. Rather than simply adding 1, let's try to add 1, and if that hasn't done anything, let's call `Math.nextUp` instead and see what the actual next possible number is.
 ```java
@@ -211,15 +213,15 @@ There is an interesting turnaround at value `16777216` where we go from talking 
 
 Why is it not exactly twice as large as the range from [1, 2]? Well remember, the actual ranges covered are powers of two. [2, 4) all have the same number of values, as do [4, 8). So in reality, the range [0, 1) contains many different powers of two that are less than 1. [.5, 1) is one such range, as is [.25, .5). I will leave breaking this range down to smaller powers of two as an exercise for the reader.
 
-# So what does this all mean?
+## So what does this all mean?
 
 In general? Not a lot, as long as you keep the action of your game within reasonable bounds, such as [-1000, 1000] you still get pretty decent precision. Roughly 1000 subdivisions per unit. This is probably good enough for most games. Consider that the typical high-end monitor on the market today has about 4k resolution per line. At coordinates about 1000 away from the origin, there are still about 1000 subdivisions of each whole number. So let's say you have a game object around that area in the world, and a camera which is viewing exactly one game unit. Then a user with a 4K monitor may notice an object being misplaced by about +/- 2 pixels in that situation. That's an extremely unusual situation.
 
-## Unity Pitfalls
+### Unity Pitfalls
 
 I'm going to focus on Unity here since I have the most experience with it. I think there are some common pitfalls in which Unity games may fall into a trap where they are extremely sensitive to floating point precision error.
 
-### Time.time
+#### Time.time
 
 [Time.time](https://docs.unity3d.com/ScriptReference/Time-time.html) is Unity's go-to, default value for "How long has the game been running, in seconds". It is a 32 bit `float` value. So right off the bat, you know, based on our analysis above, that 3/4s of the precision of this value is thrown away after the first second of the game running.
 
@@ -249,6 +251,6 @@ To be fair, Unity warns against using [Time.time] for such purposes in the manua
 
 But that doesn't stop beginners from doing so anyway!
 
-### Vector3
+#### Vector3
 
 If the action of your game extends past about 1024 units away from the origin, the precision of object positions can really start to suffer.  In Unity, the Physics engine considers one Unity unit to be one meter. Imagine a flight simulator game where you are flying an airplane traveling at 500 miles per hour, or a game like [Kerbal Space Program](https://www.kerbalspaceprogram.com/) (which was written in Unity!) where you can travel at orbital velocities of thousands of meters per second. You can _very quickly_ get outside of the reasonable range of precision. It will also wreak havoc on your camera and cause unsightly jittering. Any kind of large/open world game must therefore use a [floating origin](https://wiki.unity3d.com/index.php/Floating_Origin) technique to remain stable over large distances.
