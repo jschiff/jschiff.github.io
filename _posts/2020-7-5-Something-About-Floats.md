@@ -207,9 +207,9 @@ Low         High        Values In Between   Distance Between Values
 ```
 There is an interesting turnaround at value `16777216` where we go from talking about "How many float values are there between two whole numbers?" to "How many whole numbers are there between two floats?". 
 
-### So what's up with the range [0, 1]?
+### So what's up with the range [0, 1)?
 
-Why is it not cut in half, in the next 
+Why is it not exactly twice as large as the range from [1, 2]? Well remember, the actual ranges covered are powers of two. [2, 4) all have the same number of values, as do [4, 8). So in reality, the range [0, 1) contains many different powers of two that are less than 1. [.5, 1) is one such range, as is [.25, .5). I will leave breaking this range down to smaller powers of two as an exercise for the reader.
 
 # So what does this all mean?
 
