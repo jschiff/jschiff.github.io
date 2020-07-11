@@ -1,5 +1,4 @@
 ---
----
 layout: post
 title: Something I've always wondered about floats
 ---
