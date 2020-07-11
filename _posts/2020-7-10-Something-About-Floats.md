@@ -3,7 +3,7 @@ layout: post
 title: Something I've always wondered about floats
 ---
 
-## More Bits Is More Good##
+## More Bits Is More Good
 
 In 1996 Nintendo released the N64. I was 6 years old at the time. I had no idea what a "bit" was, but the N64 has 64 of them and that was more than any previous game system. 64 bits was the future. Apparently the old Sony Playstation, which came out 3 years earlier only had 32 bits. This obviously meant the N64 was better, right?
 
@@ -16,7 +16,7 @@ In 2009, Microsoft released Windows 7, and within a year [almost half of Windows
 
 By 2020, more than 90% of all PCs run [64 bit operating systems on 64 bit hardware](https://techtalk.pcmatic.com/64-bit-operating-systems/)
 
-## Nowadays...##
+## Nowadays...
 
 It would be a reasonable assumption that by now, flagship game engines would be using 64-bit floating points for basic game-world position, rotation, and scale. But you would be wrong!
 
@@ -46,7 +46,7 @@ I've always wondered about this but could never really find a good explanation f
 
 I've spent a lot of time with Unity over the past couple of years, and I always particularly wondered what this means for a property like Unity's [Time.time](https://docs.unity3d.com/ScriptReference/Time-time.html). It's a 32-bit value that represents the time elapsed since the start of the game. Given the above information, we know that 3/4 of the precision of this value are thrown out after the first second of the game. How quickly does this number become completely useless?
 
-## The Experiment##
+## The Experiment
 
 I set out to find out. I know the answers to these questions can be answered by examining the [IEEE-754](https://en.wikipedia.org/wiki/IEEE_754) and doing some math. But first of all, I'm not that smart, and second, I'd rather get my hands dirty.
 
