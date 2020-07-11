@@ -3,7 +3,7 @@ layout: post
 title: Something I've always wondered about floats
 ---
 
-## More Bits Is More Good
+## More Bits Is More Good##
 
 In 1996 Nintendo released the N64. I was 6 years old at the time. I had no idea what a "bit" was, but the N64 has 64 of them and that was more than any previous game system. 64 bits was the future. Apparently the old Sony Playstation, which came out 3 years earlier only had 32 bits. This obviously meant the N64 was better, right?
 
@@ -16,7 +16,7 @@ In 2009, Microsoft released Windows 7, and within a year [almost half of Windows
 
 By 2020, more than 90% of all PCs run [64 bit operating systems on 64 bit hardware](https://techtalk.pcmatic.com/64-bit-operating-systems/)
 
-## Nowadays...
+## Nowadays...##
 
 It would be a reasonable assumption that by now, flagship game engines would be using 64-bit floating points for basic game-world position, rotation, and scale. But you would be wrong!
 
@@ -46,7 +46,7 @@ I've always wondered about this but could never really find a good explanation f
 
 I've spent a lot of time with Unity over the past couple of years, and I always particularly wondered what this means for a property like Unity's [Time.time](https://docs.unity3d.com/ScriptReference/Time-time.html). It's a 32-bit value that represents the time elapsed since the start of the game. Given the above information, we know that 3/4 of the precision of this value are thrown out after the first second of the game. How quickly does this number become completely useless?
 
-## The Experiment
+## The Experiment##
 
 I set out to find out. I know the answers to these questions can be answered by examining the [IEEE-754](https://en.wikipedia.org/wiki/IEEE_754) and doing some math. But first of all, I'm not that smart, and second, I'd rather get my hands dirty.
 
@@ -212,7 +212,7 @@ There is an interesting turnaround at value `16777216` where we go from talking 
 
 Why is it not exactly twice as large as the range from [1, 2]? Well remember, the actual ranges covered are powers of two. [2, 4) all have the same number of values, as do [4, 8). So in reality, the range [0, 1) contains many different powers of two that are less than 1. [.5, 1) is one such range, as is [.25, .5). I will leave breaking this range down to smaller powers of two as an exercise for the reader.
 
-## So what does this all mean?
+## So what does this all mean?##
 
 In general? Not a lot, as long as you keep the action of your game within reasonable bounds, such as [-1000, 1000] you still get pretty decent precision. Roughly 1000 subdivisions per unit. This is probably good enough for most games. Consider that the typical high-end monitor on the market today has about 4k resolution per line. At coordinates about 1000 away from the origin, there are still about 1000 subdivisions of each whole number. So let's say you have a game object around that area in the world, and a camera which is viewing exactly one game unit. Then a user with a 4K monitor may notice an object being misplaced by about +/- 2 pixels in that situation. That's an extremely unusual situation.
 
