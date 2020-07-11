@@ -32,7 +32,7 @@ Why is this? I won't dig too deeply into the _why_ in this post, but generally i
 
 32 bit is a compromise between cost and realism. Through experimentation, people have generally decided that 16 bit is not enough precision to convincingly represent a 3D world, but 32 is. 64 is better but the costs are not worth the benefit. Large, open-world games quickly run into challenges related to 32-bit floating point precision, but they can be worked with clever tricks like "Origin Shifting"
 
-#Precision
+# Precision
 
 Origin shifting is a trick that relies on a property of floating point numbers, which is that the precision of numbers you can represent with a float is higher the closer you are the origin. I don't remember where I originally read it, but a full _half_ of the possible values you can represent with a floating point number lie within the range [-1, 1]
 
