@@ -187,7 +187,7 @@ Low         High        Values In Between   Distance Between Values
 8192        8193        1024                1
 16384       16385       512                 1
 32768       32769       256                 1
-65536       65537       128                 1<a name="128"></a>
+65536       65537       128                 1
 131072      131073      64                  1
 262144      262145      32                  1
 524288      524289      16                  1
@@ -241,7 +241,7 @@ IEnumerator LerpObject(Transform t, Vector3 destination, float duration) {
 } 
 ```
 
-This looks fine at first. Then a player leaves your game on overnight to get an achievement([approximately 18 hours](#128)), and `Time.time` only has 128 subdivisions per second. Suddenly the movement looks jerky on your player's 144hz monitor because the refresh rate of the game is beyond the resolution of your Lerp.
+This looks fine at first. Then a player leaves your game on overnight to get an achievement, and `Time.time` only has 128 subdivisions per second. Suddenly the movement looks jerky on your player's 144hz monitor because the refresh rate of the game is beyond the resolution of your Lerp.
 
 To be fair, Unity warns against using [Time.time] for such purposes in the manual:
 
