@@ -96,6 +96,7 @@ Given point #2, it stands to reason that we can skip any number that is not a po
 
 ```
 Low     High    Values In Between
+0       1       1065353216
 1       2       8388608
 2       3       4194304
 4       5       2097152
@@ -250,7 +251,7 @@ This looks fine at first. Then a player leaves your game on overnight to get an 
 
 To be fair, Unity warns against using [Time.time] for such purposes in the manual:
 
->Regular (per frame) calls should be avoided: Time.time is intended to supply the length of time the application has been running for, and not the time per frame.
+> Regular (per frame) calls should be avoided: Time.time is intended to supply the length of time the application has been running for, and not the time per frame.
 
 But that doesn't stop beginners from doing so anyway!
 
