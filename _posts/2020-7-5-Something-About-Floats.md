@@ -3,7 +3,7 @@ layout: post
 title: Something I've always wondered about floats
 ---
 
-#More Bits Is More Good
+# More Bits Is More Good
 
 In 1996 Nintendo released the N64. I was 6 years old at the time. I had no idea what a "bit" was, but the N64 has 64 of them and that was more than any previous game system. 64 bits was the future. Apparently the old Sony Playstation, which came out 3 years earlier only had 32 bits. This obviously meant the N64 was better, right?
 
