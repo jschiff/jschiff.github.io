@@ -217,7 +217,7 @@ There is an interesting turnaround at value `16777216` where we go from talking 
 
 Why is it not exactly twice as large as the range from [1, 2]? Well remember, the actual ranges covered are powers of two. [2, 4) all have the same number of values, as do [4, 8). So in reality, the range [0, 1) contains many different powers of two that are less than 1. [.5, 1) is one such range, as is [.25, .5). I will leave breaking this range down to smaller powers of two as an exercise for the reader.
 
-## So what does this all mean?##
+## So what does this all mean?
 
 In general? Not a lot, as long as you keep the action of your game within reasonable bounds, such as [-1000, 1000] you still get pretty decent precision. Roughly 1000 subdivisions per unit. This is probably good enough for most games. Consider that the typical high-end monitor on the market today has about 4k resolution per line. At coordinates about 1000 away from the origin, there are still about 1000 subdivisions of each whole number. So let's say you have a game object around that area in the world, and a camera which is viewing exactly one game unit. Then a user with a 4K monitor may notice an object being misplaced by about +/- 2 pixels in that situation. That's an extremely unusual situation.
 
