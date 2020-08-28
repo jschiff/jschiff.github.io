@@ -1,6 +1,6 @@
 ---
 layout: post
-title: New Throwing Mechanic! Untitle Drone Puzzle Game
+title: New Throwing Mechanic! Untitled Drone Puzzle Game
 youtubeId: 0xasKAsCHio
 ---
 
