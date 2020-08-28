@@ -4,7 +4,7 @@ title: New Throwing Mechanic! Untitled Drone Puzzle Game
 youtubeId: 0xasKAsCHio
 ---
 
-Sharing another small updated on my as-yet untitled drone-based puzzle game.
+Sharing another small update on my still-untitled drone-based puzzle game.
 
 I added a throwing mechanic to my untitled drone puzzle Unity game. This makes it a little easier for the player to insert objects such as power plugs and batteries into their slots from a distance, without having to awkwardly fly every object around.
 
