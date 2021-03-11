@@ -17,7 +17,3 @@ Looking to show your appreciation? Maybe something I've written here or elsewher
 ![Ethereum-Wallet](/images/ETHDonate.png){:class="img-responsive"}
 <BR>
 0xFc5df2A160CB4A0Ed1CFe700ee442DA6318Fee4c
-
-### Contact me
-
-[jeremy@sadnessmonday.com](mailto:jeremy@sadnessmonday.com)
