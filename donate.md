@@ -6,9 +6,6 @@ permalink: /donate/
 
 Looking to show your appreciation? Maybe something I've written here or elsewhere helped you out? Want to buy me a coffee to show your appreciation? Here's the place to do it.
 
-### Paypal
-[Donate with PayPal](https://www.paypal.com/biz/fund?id=PRST3PM9MTCL8)
-
 ### Donate Bitcoin:<BR>
 ![Bitcoin-Wallet](/images/BTCDonate.png){:class="img-responsive"}
 <BR>
