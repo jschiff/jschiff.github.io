@@ -9,7 +9,7 @@ Looking to show your appreciation? Maybe something I've written here or elsewher
 <iframe id='kofiframe' src='https://ko-fi.com/praetorblue/?hidefeed=true&widget=true&embed=true&preview=true' style='border:none;width:100%;padding:4px;background:#f9f9f9;' height='712' title='praetorblue'></iframe>
 
 ### Donate via Paypal:<BR>
-https://www.paypal.com/donate/?business=5A352T9PA6AN6&no_recurring=0&item_name=Helping+people+with+Unity&currency_code=USD
+[Donate via Paypal here](https://www.paypal.com/donate/?business=5A352T9PA6AN6&no_recurring=0&item_name=Helping+people+with+Unity&currency_code=USD)
 
 ### Donate Bitcoin:<BR>
 ![Bitcoin-Wallet](/images/BTCDonate.png){:class="img-responsive"}
